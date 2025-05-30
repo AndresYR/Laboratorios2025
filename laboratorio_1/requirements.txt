@@ -1,0 +1,6 @@
+pandas==2.2.3
+openpyxl==3.1.5
+requests==2.32.3
+SQLAlchemy==2.0.41
+python-decouple==3.8
+PyMySQL==1.1.1
