@@ -1,16 +1,21 @@
 import domain
 
-from os import path
+from pathlib import Path
 from data.data_saver import DataSaver
 
 
-def data_to_bbdd(ruta, nombre_tabla):
-    file_extension = path.splitext(ruta)[1]
+def standar_name(s):
+    return s.lower().strip().replace(" ", "_")
+
+
+def data_to_bbdd(ruta):
+
+    nombre_tabla = standar_name(ruta.name).replace(".", "_")
 
     # Cargar y limpiar data
-    if file_extension == ".csv":
+    if ruta.suffix == ".csv":
         data = domain.DatasetCSV(ruta)
-    elif file_extension == ".xlsx":
+    elif ruta.suffix == ".xlsx":
         data = domain.DatasetExcel(ruta)
     else:
         raise TypeError("Por favor ingresa un archivo CSV o Excel")
@@ -25,6 +30,15 @@ def data_to_bbdd(ruta, nombre_tabla):
 
 
 if __name__ == "__main__":
-    ruta = path.join(path.dirname(__file__), "files/economia.csv")
-    # ruta = path.join(path.dirname(__file__), "files/Datos Empresa.xlsx")
-    data_to_bbdd(ruta, "probando")
+    # Detectar archivos compatibles en carpeta /files
+    directorio = Path("./files")
+    archivos_csv = list(directorio.glob("*.csv"))
+    archivos_excel = list(directorio.glob("*.xlsx"))
+    archivos = archivos_csv + archivos_excel
+
+    # Iterar archivos encontrados
+    for archivo in archivos:
+        data_to_bbdd(archivo)
+        print(f"Datos de archivo {archivo.name} guardados exitosamente\n")
+        print("--------------------------------------------\n")
+    print("EJECUCION FINALIZADA")
